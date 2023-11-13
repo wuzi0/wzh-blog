@@ -10,14 +10,13 @@ nav:
 # Menu 目錄
 menu:
   主页: / || fas fa-home
-  Archives: /archives/ || fas fa-archive
+  时间轴: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
   分类: /categories/ || fas fa-folder-open
-  List||fas fa-list:
-    Music: /music/ || fas fa-music
-    Movie: /movies/ || fas fa-video
-  链接: /link/ || fas fa-link
-  关于: /about/ || fas fa-heart
+  列表||fas fa-list||hide:
+    友链: /link/ || fas fa-link
+    关于: /about/ || fas fa-heart
+  
 
 # Code Blocks (代碼相關)
 # --------------------------------------
@@ -33,8 +32,8 @@ code_word_wrap: false
 # formal:
 #   icon: link || the description || color
 social:
-  # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
-  # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
+  fab fa-github: https://github.com/wuzi0/wzh-blog || Github || '#24292e'
+  fas fa-envelope: https://mail.qq.com/ || Email:zihao26@qq.com || '#24292e'
 
 # Image (圖片設置)
 # --------------------------------------
@@ -54,7 +53,7 @@ disable_top_img: false
 index_img: /img/top-img.png
 
 # If the banner of page not setting, it will show the top_img
-default_top_img:
+default_top_img: /img/default_top_img2.png
 
 # The banner image of archive page
 archive_img:
@@ -87,7 +86,7 @@ cover:
   position: both
   # When cover is not set, the default cover is displayed (當沒有設置cover時，默認的封面顯示)
   default_cover:
-    # - https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg
+     - https://img2.baidu.com/it/u=551125832,420285419&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500
 
 # Replace Broken Images (替換無法顯示的圖片)
 error_img:
@@ -96,16 +95,16 @@ error_img:
 
 # A simple 404 page
 error_404:
-  enable: false
+  enable: true
   subtitle: 'Page Not Found'
   background: https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png
 
 post_meta:
   page: # Home Page
-    date_type: created # created or updated or both 主頁文章日期是創建日或者更新日或都顯示
-    date_format: date # date/relative 顯示日期還是相對日期
+    date_type: updated # created or updated or both 主頁文章日期是創建日或者更新日或都顯示
+    date_format: relative # date/relative 顯示日期還是相對日期
     categories: true # true or false 主頁是否顯示分類
-    tags: false # true or false 主頁是否顯示標籤
+    tags: true # true or false 主頁是否顯示標籤
     label: true # true or false 顯示描述性文字
   post:
     date_type: both # created or updated or both 文章頁日期是創建日或者更新日或都顯示
@@ -120,7 +119,7 @@ post_meta:
 # 3: auto_excerpt (default)
 # false: do not show the article introduction
 index_post_content:
-  method: 3
+  method: 2
   length: 500 # if you set method to 2 or 3, the length need to config
 
 # anchor
