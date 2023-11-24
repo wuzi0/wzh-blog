@@ -41,3 +41,21 @@
 `各自配置的 top_img > cover > 配置文件的 default_top_img`
 ##### 文章封面的获取顺序：
 `各个md文件的Front-matter 中的 cover > 配置文件的 default_cover > false`
+
+
+
+### **butterfly-config-v1.3**
+
+增加live2d看板娘模型：
+
+安装了`hexo-helper-live2d`插件，但是这个插件只支持moc类型的文件，不支持moc3，所以这里只是测试。
+
+安装了`hexo-helper-live2d`插件提供的官方模型包（`live2d-widget-model-haru`、`live2d-widget-model-koharu`、`live2d-widget-model-tororo`模型包，可以在`node_modules`文件夹下找到，文件夹名字就为模型名）。
+
+上面插件和官方模型包都是用npm安装的，要想卸载，用`npm uninstall+插件名/模型名`即可卸载。
+
+按插件要求修改了`_config.yml`配置文件，即添加了`live2d`相关字段。
+
+================================================================================
+
+安装自定义的`live2d`模型（moc），有的测试成功了，但是有的也不生效，还在研究中，这次没有自定义模型的相关文件添加，研究明白了再更新，这里只是提一嘴。后续还有moc3的，等全部研究明白了再更新一下，到时候也可以试试moc3的。
