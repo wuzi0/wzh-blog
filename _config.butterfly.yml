@@ -910,8 +910,23 @@ css_prefix: true
 inject:
   head:
     # - <link rel="stylesheet" href="/xxx.css">
+    - <script src = "/live2d-test-demo/bundle.js"></script>
+    - <link rel="stylesheet" href="/live2d-test-demo/live2d/css/live2d.css" />
+    - <script src="https://unpkg.com/core-js-bundle@3.6.1/minified.js"></script>
+    - <script src="/live2d-test-demo/live2dcubismcore.js"></script>
+    - <script src="/live2d-test-demo/extra_hexo2.js"></script>
   bottom:
-    # - <script src="xxxx"></script>
+    - <div id="landlord">
+        <div class="message" style="opacity:0"></div>
+        <canvas id="live2d" width="220" height="360" class="live2d"></canvas>
+    - <div class="hide-button">隐藏</div>
+    - </div>
+    - <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    - <script type="text/javascript" src="/live2d-test-demo/live2d/js/message.js"></script>
+    - <script type="text/javascript" src="/live2d-test-demo/extra_hexo.js"></script>
+
+
+
 
 # CDN
 # Don't modify the following settings unless you know how they work

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>MeiDou Live2D 看板娘 Demo</title>
+  <!-- 下面两个一定要加上 -->
+  <!-- <link rel="stylesheet" type="text/css" href="./live2d/assets/waifu.css"/> -->
+  <script src = "./bundle.js"></script>
+  <link rel="stylesheet" href="./live2d/css/live2d.css" />
+  <script src="https://unpkg.com/core-js-bundle@3.6.1/minified.js"></script>
+
+  <script src="./live2dcubismcore.js"></script>
+  
+</head>
+<body>
+  <!-- <div class="waifu">
+    <div class="waifu-tips"></div>
+    <canvas id="live2d" width="280" height="250" class="live2d"></canvas>
+    <div class="waifu-tool">
+        <span class="fui-home"></span>
+        <span class="fui-chat"></span>
+        <span class="fui-eye"></span>
+        <span class="fui-user"></span>
+        <span class="fui-photo"></span>
+        <span class="fui-info-circle"></span>
+        <span class="fui-cross"></span>
+    </div>
+</div> -->
+  <!-- Live2DCubismCore script -->
+  
+<!-- <script src="./live2dcubismcore.js"></script> -->
+  <!-- Build script -->
+  <!-- <script src = "./meidou_live2d.js"></script> -->
+  <!-- <script src="./live2d/assets/waifu-tips.js"></script> -->
+  <!-- <script type="text/javascript">
+    //必选参数
+    let modulesPath = "./models/"
+    let modelNames = ['kafuka1']  //注意，这里的名字是存放你模型文件的主目录的名字，目录中的moc3.json文件的名字一定要与目录同名
+    //可选参数
+    let waifuTipsUrl = "./live2d/assets/waifu-tips.json"
+
+    initModel(modulesPath,modelNames,waifuTipsUrl);
+  </script> -->
+  <div id="landlord">
+    <div class="message" style="opacity:0"></div>
+    <canvas id="live2d" width="400" height="360" class="live2d"></canvas>
+    <div class="hide-button">隐藏</div>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    //这个路径是message.json的路径
+    var message_Path = './live2d/'
+  </script>
+  <script type="text/javascript">
+    //这个是home_Path的路径,这里是随便设置的。填你域名主页的路径就行，但是以/结尾
+    var home_Path = '/'
+  </script>  
+  <script type="text/javascript" src="./live2d/js/message.js"></script>
+
+  <script type="text/javascript">
+    var loader  = live2dLoader 
+    //这两个是必须设置的
+    loader.resourcesConfig.setResourcesPath("./models/")
+    loader.resourcesConfig.setModelNames(['kafuka1'])
+    loader.start();
+    console.log(loader)
+    //必选参数
+    // let modulesPath = "./models/"
+    // let modelNames = ['kafuka1']  //注意，这里的名字是存放你模型文件的主目录的名字，目录中的moc3.json文件的名字一定要与目录同名
+    //可选参数
+    // let waifuTipsUrl = "./live2d/assets/waifu-tips.json"
+
+    // initModel(modulesPath,modelNames);
+  </script>
+</body>
+</html>

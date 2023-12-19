@@ -16,6 +16,18 @@ html(lang=config.language data-theme=theme.display_mode class=htmlClassHideAside
       
     !=partial('includes/sidebar', {}, {cache: true})
 
+    //- div.waifu
+    //-   div.waifu-tips
+    //-   canvas#live2d(width="280", height="250", class="live2d")
+    //-   div.waifu-tool
+    //-     span.fui-home
+    //-     span.fui-chat
+    //-     span.fui-eye
+    //-     span.fui-user
+    //-     span.fui-photo
+    //-     span.fui-info-circle
+    //-     span.fui-cross
+
     if page.type !== '404'
       #body-wrap(class=pageType)
         include ./header/index.pug
@@ -38,10 +50,10 @@ html(lang=config.language data-theme=theme.display_mode class=htmlClassHideAside
           - var footer_bg = ''
 
         footer#footer(style=footer_bg)
-          !=partial('includes/footer', {}, {cache: true})
-
+          !=partial('includes/footer', {}, {cache: true})       
     else
       include ./404.pug
 
     include ./rightside.pug
     include ./additional-js.pug
+
