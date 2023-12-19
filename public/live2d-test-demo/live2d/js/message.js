@@ -80,18 +80,23 @@ initTips();
     if(document.referrer !== ''){
         var referrer = document.createElement('a');
         referrer.href = document.referrer;
-        text = '嗨！来自 <span style="color:#0099cc;">' + referrer.hostname + '</span> 的朋友！';
-        var domain = referrer.hostname.split('.')[1];
-        if (domain == 'baidu') {
-            text = '嗨！ 来自 百度搜索 的朋友！<br>欢迎访问<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
-        }else if (domain == 'so') {
-            text = '嗨！ 来自 360搜索 的朋友！<br>欢迎访问<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
-        }else if (domain == 'google') {
-            text = '嗨！ 来自 谷歌搜索 的朋友！<br>欢迎访问<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
-        }
+        // text = '嗨！来自 <span style="color:#0099cc;">' + referrer.hostname + '</span> 的朋友！';
+        // var domain = referrer.hostname.split('.')[1];
+        // if (domain == 'baidu') {
+        //     text = '嗨！ 来自 百度搜索 的朋友！<br>欢迎访问<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
+        // }else if (domain == 'so') {
+        //     text = '嗨！ 来自 360搜索 的朋友！<br>欢迎访问<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
+        // }else if (domain == 'google') {
+        //     text = '嗨！ 来自 谷歌搜索 的朋友！<br>欢迎访问<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
+        // }
+        
+        //不要上面的逻辑，这里直接随便添加一个文本，但是如果这里你不添加文本，会导致有框但是没有文字。
+        text = '嗨~';
     }else {
         // if (window.location.href == `${home_Path}`) { //主页URL判断，需要斜杠结尾
-        if (window.location.href == `http://localhost:4000/`) { //主页URL判断，需要斜杠结尾
+        // 本地调试用这一行
+        // if (window.location.href == `http://localhost:4000/`) { //主页URL判断，需要斜杠结尾
+        if (window.location.href == `https://blog.wuzih.top/`) { //主页URL判断，需要斜杠结尾
             var now = (new Date()).getHours();
             if (now > 23 || now <= 5) {
                 text = '你是夜猫子呀？这么晚还不睡觉，明天起的来嘛？';
@@ -113,7 +118,8 @@ initTips();
                 text = '嗨~';
             }
         }else {
-            text = '欢迎阅读<span style="color:#0099cc;">「 ' + document.title.split(' - ')[0] + ' 」</span>';
+            // text = '欢迎阅读<span>「' + document.title.split(' - ')[0] + '」</span>';
+            text = '欢迎访问~';
         }
     }
     showMessage(text, 12000);
@@ -121,13 +127,16 @@ initTips();
 
 // 下面这些事用于显示随机语录消息的，是https://v1.hitokoto.cn/的API，这里由于有时候随机的话有点长，导致美观，所以就注释掉了
 // 如果你想要，直接取消注释即可，然后调整一下样式就行了，把显示的那个框的width调宽一点。
-// window.setInterval(showHitokoto,30000);
+// 这里还是添加上了，不然感觉太单调了
+window.setInterval(showHitokoto,30000);
 
-// function showHitokoto(){
-//     $.getJSON('https://v1.hitokoto.cn/',function(result){
-//         showMessage(result.hitokoto, 5000);
-//     });
-// }
+function showHitokoto(){
+    $.getJSON('https://v1.hitokoto.cn/',function(result){
+        showMessage(result.hitokoto, 5000);
+    });
+}
+
+
 
 function showMessage(text, timeout){
     if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];
