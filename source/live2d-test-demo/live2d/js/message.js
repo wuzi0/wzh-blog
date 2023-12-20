@@ -130,20 +130,61 @@ initTips();
 
 // 下面这些事用于显示随机语录消息的，是https://v1.hitokoto.cn/的API，这里由于有时候随机的话有点长，导致美观，所以就注释掉了
 // 如果你想要，直接取消注释即可，然后调整一下样式就行了，把显示的那个框的width调宽一点。
-// 这里还是添加上了，不然感觉太单调了
 
-//表示多少毫秒后执行一次showHitokoto()函数，这里设置为30秒
-window.setInterval(showHitokoto,30000);
+// 表示多少毫秒后执行一次showHitokoto()函数，这里设置为30秒
+// window.setInterval(showHitokoto,30000);
+// function showHitokoto(){
+//     $.getJSON('https://v1.hitokoto.cn/',function(result){
+//         showMessage(result.hitokoto, 5000);
+//     });
+// }
+
+// 不用上面的函数，原因是有个小bug，当你点击live2d模型的时候，它也会突然跳出随机消息，因为上面是任何情况都是30秒执行一次函数
+// 这里改一下逻辑，当用户未活动时再计时调用这个API，显示消息
+//window.hitokotoTimer = window.setInterval(showHitokoto,30000);
+/* 检测用户活动状态，并在空闲时 定时显示一言 */
+var getActed = false;
+window.hitokotoTimer = 0;
+var hitokotoInterval = false;
+
+// 这两行是检测用户鼠标移动和键盘按下的事件
+// 第一行是的$(document).mousemove和$(document).keydown是jQuery的事件监听器，它们分别监听了鼠标移动和键盘按键的事件。当这些事件被触发时，getActed变量会被设置为true。
+// 第二行是设置一个定时器，每隔1秒进行检查getActed变量的值。如果getActed为false，则调用ifActed函数；如果getActed为true，则调用elseActed函数。
+// 其中setInterval就是设置一个定时器
+$(document).mousemove(function(e){getActed = true;}).keydown(function(){getActed = true;});
+setInterval(function() { if (!getActed) ifActed(); else elseActed(); }, 1000);
+
+// 执行hitokotoTimer = window.setInterval(showHitokoto, 30000)这一行，是先等待30秒执行第一次，并不是上来就执行第一次，再等待30秒执行第二次
+// 加上前面的一秒，也就是1秒不动才会保证调用ifActed函数，如果动了，就调用elseActed函数，它会清除ifActed的计时器，所以是30-31秒不动才会显示随机语录
+function ifActed() {
+    if (!hitokotoInterval) {
+        hitokotoInterval = true;
+        hitokotoTimer = window.setInterval(showHitokoto, 30000);
+    }
+}
+
+// window.clearInterval(hitokotoTimer)是清除上面ifActed()里的30秒执行showHitokoto函数的计时器。
+function elseActed() {
+    getActed = hitokotoInterval = false;
+    window.clearInterval(hitokotoTimer);
+}
 
 function showHitokoto(){
-    $.getJSON('https://v1.hitokoto.cn/',function(result){
+	/* 增加 hitokoto.cn API */
+    $.getJSON('https://v1.hitokoto.cn',function(result){
+        var text = '这句一言来自 <span style="color:#0099cc;">『{source}』</span>，是 <span style="color:#0099cc;">{creator}</span> 在 hitokoto.cn 投稿的。';
+        text = text.renderTip({source: result.from, creator: result.creator});
         showMessage(result.hitokoto, 5000);
+        window.setTimeout(function() {showMessage(text, 3000);}, 5000);
     });
+
 }
 
 
 
+
 //timeout单位ms，表示多少毫秒后消失
+
 function showMessage(text, timeout){
     if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];
     console.log('showMessage', text);
