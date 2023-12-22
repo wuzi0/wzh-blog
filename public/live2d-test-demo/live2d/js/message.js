@@ -155,6 +155,7 @@ $(document).mousemove(function(e){getActed = true;}).keydown(function(){getActed
 setInterval(function() { if (!getActed) ifActed(); else elseActed(); }, 1000);
 
 // 执行hitokotoTimer = window.setInterval(showHitokoto, 30000)这一行，是先等待30秒执行第一次，并不是上来就执行第一次，再等待30秒执行第二次
+// 加上前面的一秒，也就是1秒不动才会保证调用ifActed函数，如果动了，就调用elseActed函数，它会清除ifActed的计时器，所以是30-31秒不动才会显示随机语录
 function ifActed() {
     if (!hitokotoInterval) {
         hitokotoInterval = true;
