@@ -1,0 +1,266 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>广播网络实验 | wzh's blog</title><meta name="author" content="wzh"><meta name="copyright" content="wzh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="广播网络实验记录一下计算机网络实验，对于ubuntu系统的安装和相关python环境配置请参考网上教程，这里只是记录这个广播网络的实验。 实验内容：1、实现节点广播的broadcast_packet函数 2、验证广播网络能够正常运行：从一个端节点ping另一个端节点 3、验证广播网络的效率：在three_nodes_bw.py进行iperf测量。两种场景：H1: iperf client; H2,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="广播网络实验">
+<meta property="og:url" content="http://example.com/2023/12/25/%E5%B9%BF%E6%92%AD%E5%AE%9E%E9%AA%8C/index.html">
+<meta property="og:site_name" content="wzh&#39;s blog">
+<meta property="og:description" content="广播网络实验记录一下计算机网络实验，对于ubuntu系统的安装和相关python环境配置请参考网上教程，这里只是记录这个广播网络的实验。 实验内容：1、实现节点广播的broadcast_packet函数 2、验证广播网络能够正常运行：从一个端节点ping另一个端节点 3、验证广播网络的效率：在three_nodes_bw.py进行iperf测量。两种场景：H1: iperf client; H2,">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img2.baidu.com/it/u=551125832,420285419&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500">
+<meta property="article:published_time" content="2023-12-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-12-28T16:53:30.750Z">
+<meta property="article:author" content="wzh">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img2.baidu.com/it/u=551125832,420285419&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://example.com/2023/12/25/%E5%B9%BF%E6%92%AD%E5%AE%9E%E9%AA%8C/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '广播网络实验',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: true,
+  isToc: true,
+  postUpdate: '2023-12-29 00:53:30'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><script src = "/live2d-test-demo/bundle2.js"></script><link rel="stylesheet" href="/live2d-test-demo/live2d/css/live2d.css" /><script src="https://unpkg.com/core-js-bundle@3.6.1/minified.js"></script><script src="/live2d-test-demo/live2dcubismcore.js"></script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (false) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img2.baidu.com/it/u=551125832,420285419&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=889&amp;h=500')"><nav id="nav"><span id="blog-info"><a href="/" title="wzh's blog"><span class="site-name">wzh's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">广播网络实验</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2023-12-24T16:00:00.000Z" title="Created 2023-12-25 00:00:00">2023-12-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2023-12-28T16:53:30.750Z" title="Updated 2023-12-29 00:53:30">2023-12-29</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="广播网络实验"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="广播网络实验"><a href="#广播网络实验" class="headerlink" title="广播网络实验"></a>广播网络实验</h3><p>记录一下计算机网络实验，对于ubuntu系统的安装和相关python环境配置请参考网上教程，这里只是记录这个广播网络的实验。</p>
+<h4 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h4><p>1、实现节点广播的broadcast_packet函数</p>
+<p>2、验证广播网络能够正常运行：从一个端节点ping另一个端节点</p>
+<p>3、验证广播网络的效率：在three_nodes_bw.py进行iperf测量。<br>两种场景：<br>H1: iperf client; H2, H3: servers<br>H1: iperf server; H2, H3: clients</p>
+<p>4、验证环形拓扑下节点广播会产生数据包环路。</p>
+<h4 id="本人的实验环境："><a href="#本人的实验环境：" class="headerlink" title="本人的实验环境："></a>本人的实验环境：</h4><p>Windows10物理机，使用VirtualBox虚拟机，Ubuntu系统是22.04.3 LTS，python版本是2.7.18，<br>自带的python是3.10，这里2.7是自己安装的，并配置好环境，也就是默认使用python是2.7。<br>当然也可用VMware虚拟机，个人觉得可能VMware更好操作一些。</p>
+<h4 id="实验过程："><a href="#实验过程：" class="headerlink" title="实验过程："></a>实验过程：</h4><h5 id="1、实现节点广播的broadcast-packet函数："><a href="#1、实现节点广播的broadcast-packet函数：" class="headerlink" title="1、实现节点广播的broadcast_packet函数："></a>1、实现节点广播的<code>broadcast_packet</code>函数：</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">broadcast_packet</span><span class="params">(<span class="type">iface_info_t</span> *iface, <span class="type">const</span> <span class="type">char</span> *packet, <span class="type">int</span> len)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// <span class="doctag">TODO:</span> broadcast packet </span></span><br><span class="line">	<span class="built_in">fprintf</span>(<span class="built_in">stdout</span>, <span class="string">&quot;TODO: broadcast packet.\n&quot;</span>);</span><br><span class="line">	<span class="comment">// 新增</span></span><br><span class="line">	<span class="type">iface_info_t</span> *ifa;</span><br><span class="line">    list_for_each_entry(ifa, &amp;instance-&gt;iface_list, <span class="built_in">list</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (ifa != iface) &#123;</span><br><span class="line">            iface_send_packet(ifa, packet, len);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了 list_for_each_entry 函数来遍历接口链表，对于每个接口，如果它不是接收接口<code>iface</code>，则调用<code>iface_send_packet</code>函数将数据包发送到该接口。</p>
+<h5 id="2、验证广播网络能够正常运行：从一个端节点ping另一个端节点"><a href="#2、验证广播网络能够正常运行：从一个端节点ping另一个端节点" class="headerlink" title="2、验证广播网络能够正常运行：从一个端节点ping另一个端节点"></a>2、验证广播网络能够正常运行：从一个端节点ping另一个端节点</h5><p>首先安装安装<code>mininet</code>，使用第二个命令（python版本是2.7.18）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install mininet</span><br></pre></td></tr></table></figure>
+
+<p>但是显示未找到<code>mininet.topo</code>，这里再使用命令：<code>sudo python -m pip install mininet</code>来安装<code>mininet</code>相关模块及其所有依赖项。</p>
+<p>然后安装<code>cmake</code>和<code>xterm</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install xterm</span><br><span class="line">sudo apt-get install cmake</span><br></pre></td></tr></table></figure>
+
+<p>在项目的根目录下运行<code>make</code>命令，生成一个<code>hub</code>执行文件：（因为源文件有<code>makefile</code>文件，所以<code>make</code>命令可以根据你的<code>makefile</code>文件生成一个执行文件）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps2.jpg" alt="img"></p>
+<p>接着运行<code>three_nodes_bw.py</code>文件，这里的python版本是2.7.18，<br>然后用命令<code>xterm b1</code>打开b1节点的终端：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps3.jpg" alt="img"></p>
+<p>在b1的终端输入<code>./hub</code>命令来执行hub文件：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps4.jpg" alt="img"></p>
+<p>然后回到<code>Mininet</code>终端，输入ping相关命令来测试三个主机之间是否能ping通，结果是ping通的：</p>
+<p>h1 ping h2：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps5.jpg" alt="img"></p>
+<p>h2 ping h1：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps6.jpg" alt="img"></p>
+<p>h2 ping h3：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps7.jpg" alt="img"></p>
+<p>h3 ping h2：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps8.jpg" alt="img"></p>
+<p>h3 ping h1：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps9.jpg" alt="img"></p>
+<p>h1 ping h3：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps10.jpg" alt="img"></p>
+<h5 id="3、验证广播网络的效率：在three-nodes-bw-py进行iperf测量。"><a href="#3、验证广播网络的效率：在three-nodes-bw-py进行iperf测量。" class="headerlink" title="3、验证广播网络的效率：在three_nodes_bw.py进行iperf测量。"></a>3、验证广播网络的效率：在<code>three_nodes_bw.py</code>进行<code>iperf</code>测量。</h5><p>两种场景：<br>H1: iperf client; H2, H3: servers<br>H1: iperf server; H2, H3: clients</p>
+<p>先用<code>xterm</code>打开h1、h2、h3节点的终端。同时也要打开b1节点的终端，同样在b1节点上运行hub文件。然后在h1，h2，h3的终端上进行下面操作。</p>
+<h6 id="场景1：将h1作为客户端，h2和h3作为server端，测试带宽利用率"><a href="#场景1：将h1作为客户端，h2和h3作为server端，测试带宽利用率" class="headerlink" title="场景1：将h1作为客户端，h2和h3作为server端，测试带宽利用率"></a>场景1：将h1作为客户端，h2和h3作为server端，测试带宽利用率</h6><p>在h2和h3终端上输入<code>iperf -s</code>命令，这将在 h2 和 h3 节点上启动 iperf 服务器，等待客户端的连接。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps11.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps12.jpg" alt="img"></p>
+<p>然后在h1终端上分别输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iperf -c 10.0.0.2 -t 60</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iperf -c 10.0.0.3 -t 60</span><br></pre></td></tr></table></figure>
+
+<p>表示在 h1 节点上运行 iperf 客户端，分别连接到 IP 地址为 10.0.0.2（也就是h2）的 iperf 服务器和 IP 地址为 10.0.0.3（也就是h3）的 iperf 服务器并进行为期一分钟的性能测试。在测试结束后，iperf 将输出带宽、延迟等性能信息。</p>
+<p>连接h2服务器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps13.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps14.jpg" alt="img"></p>
+<p>由图可知，带宽利用率大概为8.21&#x2F;10*100% &#x3D; 82.1%</p>
+<p>连接h3服务器：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps15.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps16.jpg" alt="img"></p>
+<p> 由图可知，带宽利用率大概为8.13&#x2F;10*100% &#x3D; 81.3%</p>
+<h6 id="场景2：将h1作为server端，h2和h3作为客户端，测试带宽利用率"><a href="#场景2：将h1作为server端，h2和h3作为客户端，测试带宽利用率" class="headerlink" title="场景2：将h1作为server端，h2和h3作为客户端，测试带宽利用率"></a>场景2：将h1作为server端，h2和h3作为客户端，测试带宽利用率</h6><p>在h1节点的终端输入命令：iperf -s，来启动 iperf 服务器，等待客户端的连接。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps17.jpg" alt="img"></p>
+<p>  然后分别在h2和h3节点的终端输入命令<code>iperf -c 10.0.0.1 -t 60</code>，用于与h1的server端进行连接。</p>
+<p> h2客户端连接h1 server端：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps18.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps19.jpg" alt="img"></p>
+<p> 由图可知，带宽利用率大概为7.36&#x2F;10*100% &#x3D; 73.6%</p>
+<p>h3客户端连接h1 server端：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps20.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps21.jpg" alt="img"></p>
+<p> 由图可知，带宽利用率大概为7.55&#x2F;10*100% &#x3D; 75.5%</p>
+<h5 id="4、验证环形拓扑下节点广播会产生数据包环路。"><a href="#4、验证环形拓扑下节点广播会产生数据包环路。" class="headerlink" title="4、验证环形拓扑下节点广播会产生数据包环路。"></a>4、验证环形拓扑下节点广播会产生数据包环路。</h5><p>创建如下环形网络拓扑：</p>
+<p>三个Hub节点，b1, b2, b3，两两互联</p>
+<p>两个主机节点，h1连接到b1，h2连接到b2</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps22.png" alt="img"></p>
+<p> 创建<code>ring_topo.py</code>文件，核心代码如下：</p>
+<p>这里一开始注释写的中文，但由于这里我的ubuntu没有配ASCII相关环境，运行不了，所以这里没写中文注释。</p>
+<p><code>ring_topo.py</code>如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> mininet.topo <span class="keyword">import</span> Topo</span><br><span class="line"><span class="keyword">from</span> mininet.net <span class="keyword">import</span> Mininet</span><br><span class="line"><span class="keyword">from</span> mininet.link <span class="keyword">import</span> TCLink</span><br><span class="line"><span class="keyword">from</span> mininet.cli <span class="keyword">import</span> CLI</span><br><span class="line"></span><br><span class="line">script_deps = [ <span class="string">&#x27;ethtool&#x27;</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_scripts</span>():</span><br><span class="line">    <span class="built_in">dir</span> = os.path.abspath(os.path.dirname(sys.argv[<span class="number">0</span>]))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> fname <span class="keyword">in</span> glob.glob(<span class="built_in">dir</span> + <span class="string">&#x27;/&#x27;</span> + <span class="string">&#x27;scripts/*.sh&#x27;</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.access(fname, os.X_OK):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;%s should be set executable by using `chmod +x $script_name`&#x27;</span> % (fname))</span><br><span class="line">            sys.exit(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> program <span class="keyword">in</span> script_deps:</span><br><span class="line">        found = <span class="literal">False</span></span><br><span class="line">        <span class="keyword">for</span> path <span class="keyword">in</span> os.environ[<span class="string">&#x27;PATH&#x27;</span>].split(os.pathsep):</span><br><span class="line">            exe_file = os.path.join(path, program)</span><br><span class="line">            <span class="keyword">if</span> os.path.isfile(exe_file) <span class="keyword">and</span> os.access(exe_file, os.X_OK):</span><br><span class="line">                found = <span class="literal">True</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;`%s` is required but missing. which could be installed via `apt` or `aptitude`&#x27;</span> % (program))</span><br><span class="line">            sys.exit(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mininet will assign an IP address for each interface of a node </span></span><br><span class="line"><span class="comment"># automatically, but hub or switch does not need IP address.</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">clearIP</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">for</span> iface <span class="keyword">in</span> n.intfList():</span><br><span class="line">        n.cmd(<span class="string">&#x27;ifconfig %s 0.0.0.0&#x27;</span> % (iface))</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BroadcastTopo</span>(<span class="title class_ inherited__">Topo</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">build</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># add three hubs (b1, b2, b3)</span></span><br><span class="line">        b1 = self.addHost(<span class="string">&#x27;b1&#x27;</span>)</span><br><span class="line">        b2 = self.addHost(<span class="string">&#x27;b2&#x27;</span>)</span><br><span class="line">        b3 = self.addHost(<span class="string">&#x27;b3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># add two hosts (h1, h2)</span></span><br><span class="line">        h1 = self.addHost(<span class="string">&#x27;h1&#x27;</span>)</span><br><span class="line">        h2 = self.addHost(<span class="string">&#x27;h2&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># create a circular link</span></span><br><span class="line">        self.addLink(b1, b2, bw=<span class="number">10</span>)</span><br><span class="line">        self.addLink(b2, b3, bw=<span class="number">10</span>)</span><br><span class="line">        self.addLink(b3, b1, bw=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># link hosts to switches</span></span><br><span class="line">        self.addLink(h1, b1, bw=<span class="number">10</span>)</span><br><span class="line">        self.addLink(h2, b2, bw=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    check_scripts()</span><br><span class="line"></span><br><span class="line">    topo = BroadcastTopo()</span><br><span class="line">    net = Mininet(topo = topo, link = TCLink, controller = <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">    h1, h2, b1, b2, b3 = net.get(<span class="string">&#x27;h1&#x27;</span>, <span class="string">&#x27;h2&#x27;</span>, <span class="string">&#x27;b1&#x27;</span>, <span class="string">&#x27;b2&#x27;</span>, <span class="string">&#x27;b3&#x27;</span>)</span><br><span class="line">    h1.cmd(<span class="string">&#x27;ifconfig h1-eth0 10.0.0.1/8&#x27;</span>)</span><br><span class="line">    h2.cmd(<span class="string">&#x27;ifconfig h2-eth0 10.0.0.2/8&#x27;</span>)</span><br><span class="line">    clearIP(b1)</span><br><span class="line">    clearIP(b2)</span><br><span class="line">    clearIP(b3)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> h <span class="keyword">in</span> [h1, h2, b1, b2, b3]:</span><br><span class="line">        h.cmd(<span class="string">&#x27;./scripts/disable_offloading.sh&#x27;</span>)</span><br><span class="line">        h.cmd(<span class="string">&#x27;./scripts/disable_ipv6.sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    net.start()</span><br><span class="line">    CLI(net)</span><br><span class="line">    net.stop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>运行<code>xterm h1 h2 b1 b2 b3</code>命令打开它们的终端。</p>
+<p>然后在b1，b2，b3上运行<code>./hub</code>文件，也就是将其设置为集线器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps25.jpg" alt="img"></p>
+<p>然后在h1的终端上ping h2，命令为：<code>ping 10.0.0.2 -c 4</code>（或者<code>ping -c 4 10.0.0.2</code>），则b1 b2 b3的终端下面会不断地出现brodacast packet的提示。说明b1、b2、b3已经形成了一个环路并且环路已经打通。 （-c 4：这个选项表示发送4个ICMP请求消息。ping命令将发送4个请求到10.0.0.2，然后等待响应。）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps26.jpg" alt="img"></p>
+<p>h1显示结果：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps27.jpg" alt="img"></p>
+<h5 id="另外："><a href="#另外：" class="headerlink" title="另外："></a>另外：</h5><p>可以用Wireshark工具来进行抓包，在商店安装Wireshark之后，需要在终端输入命令：<code>sudo dpkg-reconfigure wireshark-common</code>，这是允许普通用户使用 Wireshark 使用和捕获数据包。</p>
+<p>同样的操作，在h1终端输入命令：<code>sudo wireshark</code> 会打开Wireshark操作页面，在 Wireshark 界面的过滤器框中输入以下过滤器，以仅显示 ICMP 流量，然后回车，此时Wireshark就等待抓包了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps28.jpg" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps29.jpg" alt="img"></p>
+<p>但是在终端中使用 <code>sudo wireshark</code> 启动 Wireshark 时，Wireshark 将在前台运行，并终端将被锁定，直到手动终止 Wireshark 或者按下 <code>ctrl+c</code> 中断。因此，一旦你启动 Wireshark，终端将被占用，也就是不能接着在这个h1终端输入ping命令了，需要另外打开一个终端窗口来执行其他命令。这时回到<code>mininet</code>终端再输入<code>xterm h1</code>，再打开另一个h1终端，用来输入<code>ping 10.0.0.2 -c 4</code>，这时Wireshark就会显示抓到的包了。可以看到⼀个ICMP数据包不断被转发。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wuzi0/picgo-blog-imag/blog-imag/wps30.jpg" alt="img"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">wzh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2023/12/25/%E5%B9%BF%E6%92%AD%E5%AE%9E%E9%AA%8C/">http://example.com/2023/12/25/%E5%B9%BF%E6%92%AD%E5%AE%9E%E9%AA%8C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://img2.baidu.com/it/u=551125832,420285419&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=889&amp;h=500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/11/27/python%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B02/" title="Python课程笔记(二)"><img class="cover" src="https://img2.baidu.com/it/u=551125832,420285419&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=889&amp;h=500" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">Python课程笔记(二)</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">wzh</div><div class="author-info__description">记录学习生活，欢迎访问！</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wuzi0/wzh-blog" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://mail.qq.com/" target="_blank" title="Email:zihao26@qq.com"><i class="fas fa-envelope" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E6%92%AD%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.</span> <span class="toc-text">广播网络实验</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">实验内容：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E4%BA%BA%E7%9A%84%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">本人的实验环境：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">实验过程：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81%E5%AE%9E%E7%8E%B0%E8%8A%82%E7%82%B9%E5%B9%BF%E6%92%AD%E7%9A%84broadcast-packet%E5%87%BD%E6%95%B0%EF%BC%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">1、实现节点广播的broadcast_packet函数：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E9%AA%8C%E8%AF%81%E5%B9%BF%E6%92%AD%E7%BD%91%E7%BB%9C%E8%83%BD%E5%A4%9F%E6%AD%A3%E5%B8%B8%E8%BF%90%E8%A1%8C%EF%BC%9A%E4%BB%8E%E4%B8%80%E4%B8%AA%E7%AB%AF%E8%8A%82%E7%82%B9ping%E5%8F%A6%E4%B8%80%E4%B8%AA%E7%AB%AF%E8%8A%82%E7%82%B9"><span class="toc-number">1.3.2.</span> <span class="toc-text">2、验证广播网络能够正常运行：从一个端节点ping另一个端节点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3%E3%80%81%E9%AA%8C%E8%AF%81%E5%B9%BF%E6%92%AD%E7%BD%91%E7%BB%9C%E7%9A%84%E6%95%88%E7%8E%87%EF%BC%9A%E5%9C%A8three-nodes-bw-py%E8%BF%9B%E8%A1%8Ciperf%E6%B5%8B%E9%87%8F%E3%80%82"><span class="toc-number">1.3.3.</span> <span class="toc-text">3、验证广播网络的效率：在three_nodes_bw.py进行iperf测量。</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF1%EF%BC%9A%E5%B0%86h1%E4%BD%9C%E4%B8%BA%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%8Ch2%E5%92%8Ch3%E4%BD%9C%E4%B8%BAserver%E7%AB%AF%EF%BC%8C%E6%B5%8B%E8%AF%95%E5%B8%A6%E5%AE%BD%E5%88%A9%E7%94%A8%E7%8E%87"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">场景1：将h1作为客户端，h2和h3作为server端，测试带宽利用率</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF2%EF%BC%9A%E5%B0%86h1%E4%BD%9C%E4%B8%BAserver%E7%AB%AF%EF%BC%8Ch2%E5%92%8Ch3%E4%BD%9C%E4%B8%BA%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%8C%E6%B5%8B%E8%AF%95%E5%B8%A6%E5%AE%BD%E5%88%A9%E7%94%A8%E7%8E%87"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">场景2：将h1作为server端，h2和h3作为客户端，测试带宽利用率</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4%E3%80%81%E9%AA%8C%E8%AF%81%E7%8E%AF%E5%BD%A2%E6%8B%93%E6%89%91%E4%B8%8B%E8%8A%82%E7%82%B9%E5%B9%BF%E6%92%AD%E4%BC%9A%E4%BA%A7%E7%94%9F%E6%95%B0%E6%8D%AE%E5%8C%85%E7%8E%AF%E8%B7%AF%E3%80%82"><span class="toc-number">1.3.4.</span> <span class="toc-text">4、验证环形拓扑下节点广播会产生数据包环路。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%A6%E5%A4%96%EF%BC%9A"><span class="toc-number">1.3.5.</span> <span class="toc-text">另外：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/12/25/%E5%B9%BF%E6%92%AD%E5%AE%9E%E9%AA%8C/" title="广播网络实验"><img src="https://img2.baidu.com/it/u=551125832,420285419&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=889&amp;h=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="广播网络实验"/></a><div class="content"><a class="title" href="/2023/12/25/%E5%B9%BF%E6%92%AD%E5%AE%9E%E9%AA%8C/" title="广播网络实验">广播网络实验</a><time datetime="2023-12-24T16:00:00.000Z" title="Created 2023-12-25 00:00:00">2023-12-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/27/python%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B02/" title="Python课程笔记(二)"><img src="https://img2.baidu.com/it/u=551125832,420285419&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=889&amp;h=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python课程笔记(二)"/></a><div class="content"><a class="title" href="/2023/11/27/python%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B02/" title="Python课程笔记(二)">Python课程笔记(二)</a><time datetime="2023-11-26T16:00:00.000Z" title="Created 2023-11-27 00:00:00">2023-11-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/15/python%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B01/" title="Python课程笔记(一)"><img src="https://img2.baidu.com/it/u=551125832,420285419&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=889&amp;h=500" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python课程笔记(一)"/></a><div class="content"><a class="title" href="/2023/11/15/python%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B01/" title="Python课程笔记(一)">Python课程笔记(一)</a><time datetime="2023-11-14T16:00:00.000Z" title="Created 2023-11-15 00:00:00">2023-11-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By wzh</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><div id="landlord"> <div class="message" style="opacity:0"></div> <canvas id="live2d" width="220" height="360" class="live2d"></canvas><div class="hide-button">隐藏</div></div><script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><script type="text/javascript" src="/live2d-test-demo/live2d/js/message.js"></script><script type="text/javascript" src="/live2d-test-demo/extra_hexo.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
