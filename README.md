@@ -1,27 +1,27 @@
 # wzh-blog
 
-### my blog first commit
+### **my blog first commit**
 
 搭建hexo框架
 
 
 
-### themes-change butterfly
+### **themes-change butterfly**
 
 修改主题为butterfly
 
 
 
-### butterfly-config-v1.0
+### **butterfly-config-v1.0**
 
 更换主页背景，头像，增添导航栏
 
-### butterfly-config-v1.1
+### **butterfly-config-v1.1**
 
 开启缓冲加载，防止图片还没加载导致割裂；
 更换网站图标favicon
 
-### butterfly-config-v1.2
+### **butterfly-config-v1.2**
 #### 主题页面配置
 1、增加标签页
 2、增加分类页
@@ -89,3 +89,8 @@ bug：这里对于`_config.butterfly`配置项里的`inject`里的`head`标签�
 令：修复了live2d上面显示的随机语录在你点击live2d模型时也会突然跳出来，现在live2d上面显示的随机语录是当用户无操作之后才进行显示的。
 
 说明：`message.js`都是参考这个[项目](https://github.com/stevenjoezhang/live2d-widget/tree/master)的`waifu-tips.js`文件进行修改的。
+
+### **butterfly-config-v1.6**
+
+添加博客背景彩带，修改博客侧边栏一些基础模块展示，等等。
+设置锚点，文章过期提醒等等（过期时长是一年）

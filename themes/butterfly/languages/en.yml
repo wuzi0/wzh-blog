@@ -26,10 +26,10 @@ post:
   page_pv: Post Views
   comments: Comments
   copyright:
-    author: Author
-    link: Link
-    copyright_notice: Copyright Notice
-    copyright_content: 'All articles in this blog are licensed under <a href="%s">%s</a> unless stating additionally.'
+    author: 文章作者
+    link: 文章链接
+    copyright_notice: 版权声明
+    copyright_content: '本博客所有文章除特别声明外，文章版权均归wzh所有，转载请注明来自 <a href="%s" target="_blank">%s</a>！'
   recommend: Related Articles
   edit: Edited on
 
@@ -56,22 +56,22 @@ aside:
   articles: Articles
   tags: Tags
   categories: Categories
-  card_announcement: Announcement
+  card_announcement: 公告
   card_categories: Categories
   card_tags: Tags
-  card_archives: Archives
-  card_recent_post: Recent Post
+  card_archives: 归档
+  card_recent_post: 最近文章
   card_webinfo:
-    headline: Info
-    article_name: Article
+    headline: 网站资讯
+    article_name: 文章数
     runtime:
-      name: Runtime
-      unit: days
+      name: 网站已运行时间
+      unit: 天
     last_push_date:
-      name: Last Update
-    site_wordcount: Total Count
-    site_uv_name: UV
-    site_pv_name: PV
+      name: 最近更新时间
+    site_wordcount: 本站总字数
+    site_uv_name: 本站访客数
+    site_pv_name: 本站总访问量
   more_button: View More
   card_newest_comments:
     headline: Latest Comments
